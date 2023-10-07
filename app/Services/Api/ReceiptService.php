@@ -43,7 +43,7 @@ class ReceiptService
 
             if ($request['id']) {
                 $id = $request['id'];
-                $item = Receipt::findOrFail($id);
+                $item = Receipt::where([['user_id', $user->id], ['id', $id]])->first();
             } 
             else {
                 $id = 0;

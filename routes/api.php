@@ -21,7 +21,7 @@ Route::prefix('v1')->group(function () {
     // Route::resource('posts', 'PostController');
 
     Route::middleware('auth:sanctum')->group(function () {
-        // Route::resource('blogs', 'BlogController');
+
         Route::controller('ProfileController')->group(function () {
             Route::get('/profile', 'profile');
             Route::post('/profile/store', 'store');
@@ -40,7 +40,7 @@ Route::prefix('v1')->group(function () {
 
         Route::controller('SavedItemController')->group(function () {
             Route::get('/saved-items', 'index');
-            Route::get('/saved-item/show/{id}', 'show');
+            Route::get('/saved-item/{id}', 'show');
             Route::post('/saved-item/store', 'store');
             Route::post('/saved-item/updateStatus', 'updateStatus');
             Route::post('/saved-item/delete', 'delete');
@@ -48,7 +48,7 @@ Route::prefix('v1')->group(function () {
 
         Route::controller('CustomerController')->group(function () {
             Route::get('/customers', 'index');
-            Route::get('/customer/show/{id}', 'show');
+            Route::get('/customer/{id}', 'show');
             Route::post('/customer/store', 'store');
             Route::post('/customer/updateStatus', 'updateStatus');
             Route::post('/customer/delete', 'delete');
@@ -64,18 +64,25 @@ Route::prefix('v1')->group(function () {
 
         Route::controller('ReceiptController')->group(function () {
             Route::get('/receipts', 'index');
-            Route::get('/receipt/show/{id}', 'show');
+            Route::get('/receipt/{id}', 'show');
             Route::post('/receipt/store', 'store');
             Route::post('/receipt/updateStatus', 'updateStatus');
             Route::post('/receipt/delete', 'delete');
         });
 
-        Route::controller('QuotatonController')->group(function () {
-            Route::get('/quotes', 'index');
-            Route::get('/quote/show/{id}', 'show');
-            Route::post('/quote/store', 'store');
-            Route::post('/quote/updateStatus', 'updateStatus');
-            Route::post('/quote/delete', 'delete');
+        Route::controller('QuotationController')->group(function () {
+            Route::get('/quotations', 'index');
+            Route::get('/quotation/{id}', 'show');
+            Route::post('/quotation/store', 'store');
+            Route::post('/quotation/delete', 'delete');
+        });
+
+        Route::controller('InvoiceController')->group(function () {
+            Route::get('/invoices', 'index');
+            Route::get('/invoice/{id}', 'show');
+            Route::post('/invoice/store', 'store');
+            Route::post('/invoice/delete', 'delete');
+            Route::post('/invoice/payment/store', 'storePayment');
         });
     });
 });

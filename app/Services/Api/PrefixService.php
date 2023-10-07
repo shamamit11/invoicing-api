@@ -1,7 +1,9 @@
 <?php
 namespace App\Services\Api;
 
+use App\Models\Invoice;
 use App\Models\Prefix;
+use App\Models\Quotation;
 use App\Models\Receipt;
 
 class PrefixService
@@ -67,8 +69,8 @@ class PrefixService
             $receiptObj = Receipt::where('user_id', $user->id)->latest('id')->first();
 
             if ($receiptObj) {
-                $receiptOldNumber = $receiptObj->receipt_no;
-                $r_exp = explode("-", $receiptOldNumber);
+                $receiptCurrentNumber = $receiptObj->receipt_no;
+                $r_exp = explode("-", $receiptCurrentNumber);
                 $lastElement = end($r_exp);
 
                 $receiptNo = $lastElement + 1;
@@ -104,12 +106,84 @@ class PrefixService
 
     public function generateQuotationtNo()
     {
+        try {
+            $user = auth()->user();
+            $quoteObj = Quotation::where('user_id', $user->id)->latest('id')->first();
 
+            if ($quoteObj) {
+                $quoteCurrentNumber = $quoteObj->quote_no;
+                $explode = explode("-", $quoteCurrentNumber);
+                $lastElement = end($explode);
+
+                $quoteNo = $lastElement + 1;
+
+                $prefixObj = Prefix::where('user_id', $user->id)->first();
+                $prefix = $prefixObj->quote_prefix;
+
+                return [
+                    "status" => 200,
+                    "message" => 'success',
+                    "prefix" => $prefix,
+                    "quote_no" => $quoteNo
+                ];
+            } 
+            else {
+                $prefixObj = Prefix::where('user_id', $user->id)->first();
+                $quoteNo = $prefixObj->quote_start_no;
+                $prefix = $prefixObj->quote_prefix;
+
+                return [
+                    "status" => 200,
+                    "message" => 'success',
+                    "prefix" => $prefix,
+                    "quote_no" => $quoteNo
+                ];
+            }
+
+        } catch (\Exception $e) {
+            return response()->json(['errors' => $e->getMessage()], 400);
+        }
     }
 
     public function generateInvoiceNo()
     {
-        
+        try {
+            $user = auth()->user();
+            $invoiceObj = Invoice::where('user_id', $user->id)->latest('id')->first();
+
+            if ($invoiceObj) {
+                $invoiceCurrentNumber = $invoiceObj->invoice_no;
+                $explode = explode("-", $invoiceCurrentNumber);
+                $lastElement = end($explode);
+
+                $invoiceNo = $lastElement + 1;
+
+                $prefixObj = Prefix::where('user_id', $user->id)->first();
+                $prefix = $prefixObj->invoice_prefix;
+
+                return [
+                    "status" => 200,
+                    "message" => 'success',
+                    "prefix" => $prefix,
+                    "invoice_no" => $invoiceNo
+                ];
+            } 
+            else {
+                $prefixObj = Prefix::where('user_id', $user->id)->first();
+                $invoiceNo = $prefixObj->invoice_start_no;
+                $prefix = $prefixObj->invoice_prefix;
+
+                return [
+                    "status" => 200,
+                    "message" => 'success',
+                    "prefix" => $prefix,
+                    "quote_no" => $invoiceNo
+                ];
+            }
+
+        } catch (\Exception $e) {
+            return response()->json(['errors' => $e->getMessage()], 400);
+        }
     }
 
 }
