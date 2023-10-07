@@ -24,4 +24,15 @@ class OrganizationController extends Controller {
         return $this->organization->store($request->validated());
     }
 
+    public function defaultTaxPercent() {
+        return $this->organization->defaultTaxPercent();
+    }
+
+    public function defaultTermsCondition() {
+        return $this->organization->defaultTermsCondition();
+    }
+    public function defaultCurrency() {
+        return $this->organization->defaultCurrency();
+    }
+
 }

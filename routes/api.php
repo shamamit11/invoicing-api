@@ -31,6 +31,9 @@ Route::prefix('v1')->group(function () {
         Route::controller('OrganizationController')->group(function () {
             Route::get('/organization', 'organization');
             Route::post('/organization/store', 'store');
+            Route::get('/defaultTaxPercent', 'defaultTaxPercent');
+            Route::get('/defaultTermsCondition', 'defaultTermsCondition');
+            Route::get('/defaultCurrency', 'defaultCurrency');
         });
 
         Route::controller('EmailSettingController')->group(function () {

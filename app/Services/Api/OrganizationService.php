@@ -75,4 +75,70 @@ class OrganizationService
         }
     }
 
+    public function defaultTaxPercent()
+    {
+        try {
+            $user = auth()->user();
+
+            $organization = Organization::where('user_id', $user->id)->first();
+            if ($organization) {
+                return [
+                    "status" => 200,
+                    "tax" => $organization->tax_percent
+                ];
+            } else {
+                return [
+                    "status" => 200,
+                    "tax" => []
+                ];
+            }
+        } catch (\Exception $e) {
+            return response()->json(['errors' => $e->getMessage()], 400);
+        }
+    }
+
+    public function defaultTermsCondition()
+    {
+        try {
+            $user = auth()->user();
+
+            $organization = Organization::where('user_id', $user->id)->first();
+            if ($organization) {
+                return [
+                    "status" => 200,
+                    "terms" => $organization->org_terms_conditions
+                ];
+            } else {
+                return [
+                    "status" => 200,
+                    "terms" => []
+                ];
+            }
+        } catch (\Exception $e) {
+            return response()->json(['errors' => $e->getMessage()], 400);
+        }
+    }
+
+    public function defaultCurrency()
+    {
+        try {
+            $user = auth()->user();
+
+            $organization = Organization::where('user_id', $user->id)->first();
+            if ($organization) {
+                return [
+                    "status" => 200,
+                    "currency" => $organization->org_currency
+                ];
+            } else {
+                return [
+                    "status" => 200,
+                    "currency" => []
+                ];
+            }
+        } catch (\Exception $e) {
+            return response()->json(['errors' => $e->getMessage()], 400);
+        }
+    }
+
 }
