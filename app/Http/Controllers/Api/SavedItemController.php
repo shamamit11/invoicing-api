@@ -20,8 +20,8 @@ class SavedItemController extends Controller {
         return $this->item->list();
     }
 
-    public function show() {
-        return $this->item->show();
+    public function show($id) {
+        return $this->item->show($id);
     }
 
     public function store(StoreRequest $request)

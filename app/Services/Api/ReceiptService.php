@@ -1,18 +1,18 @@
 <?php
 namespace App\Services\Api;
 
-use App\Models\Customer;
+use App\Models\Receipt;
 
-class CustomerService
+class ReceiptService
 {
     public function list()
     {
         try {
             $user = auth()->user();
-            $customers = Customer::where([['user_id', $user->id], ['is_deleted', 0]])->latest()->paginate(100);
+            $items = Receipt::where([['user_id', $user->id], ['is_deleted', 0]])->latest()->paginate(100);
             return [
                 "status" => 200,
-                "data" => $customers
+                "data" => $items
             ];
         } 
         catch (\Exception $e) {
@@ -24,10 +24,10 @@ class CustomerService
     {
         try {
             $user = auth()->user();
-            $customer = Customer::where([['user_id', $user->id], ['id', $id]])->first();
+            $item = Receipt::where([['user_id', $user->id], ['id', $id]])->first();
             return [
                 "status" => 200,
-                "data" => $customer
+                "data" => $item
             ];
         } 
         catch (\Exception $e) {
@@ -43,32 +43,28 @@ class CustomerService
 
             if ($request['id']) {
                 $id = $request['id'];
-                $customer = Customer::where([['user_id', $user->id], ['id', $id]])->first();
+                $item = Receipt::findOrFail($id);
             } 
             else {
                 $id = 0;
-                $customer = new Customer;
-                $customer->code = $user->id.'_'.date_timestamp_get($date);
-                $customer->user_id = $user->id;      
+                $item = new Receipt;
+                $item->user_id = $user->id;
+                $item->customer_id = $request['customer_id'];
+                $item->receipt_code = $user->id.'_'.date_timestamp_get($date);
+                $item->receipt_no = $request['receipt_no'];
+                $item->date = $request['date'];
+                $item->total_amount = $request['total_amount'];
             }
-            $customer->name = $request['name'];
-            $customer->phone = $request['phone'];
-            $customer->email = $request['email'];
-            $customer->address_1 = $request['address_1'];
-            $customer->address_2 = $request['address_2'];
-            $customer->city = $request['city'];
-            $customer->country = $request['country'];
-            $customer->trn_no = $request['trn_no'];
-            $customer->country = $request['country'];
-            $customer->country = $request['country'];
-            $customer->status = isset($request['status']) ? 1 : 0;
-            $customer->is_deleted = 0;
-            $customer->save();
+            $item->payment_method = $request['payment_method'];
+            $item->paid_for = $request['paid_for'];
+            $item->status = 1;
+            $item->is_deleted = 0;
+            $item->save();
 
             return [
                 "status" => 201,
                 "message" => 'success',
-                "data" => $customer
+                "data" => $item
             ];
 
         } catch (\Exception $e) {
@@ -81,7 +77,7 @@ class CustomerService
         try {
             $id = $request['id'];
 
-            Customer::where('id', $id)->update([
+            Receipt::where('id', $id)->update([
                 'status' => $request['status'],
             ]);
 
@@ -100,7 +96,7 @@ class CustomerService
         try {
             $id = $request['id'];
             
-            $item = Customer::findOrFail($id); 
+            $item = Receipt::findOrFail($id); 
 
             if($item) {
                 $item->status = 0;

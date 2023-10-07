@@ -20,14 +20,14 @@ class SavedItemService
         }
     }
 
-    public function show()
+    public function show($id)
     {
         try {
             $user = auth()->user();
-            $items = SavedItem::where([['user_id', $user->id], ['status', 1], ['is_deleted', 0]])->get();
+            $item = SavedItem::where([['user_id', $user->id], ['id', $id]])->first();
             return [
                 "status" => 200,
-                "data" => $items
+                "data" => $item
             ];
         } 
         catch (\Exception $e) {
@@ -42,7 +42,7 @@ class SavedItemService
 
             if ($request['id']) {
                 $id = $request['id'];
-                $item = SavedItem::findOrFail($id);
+                $item = SavedItem::where([['user_id', $user->id], ['id', $id]])->first();
             } 
             else {
                 $id = 0;

@@ -20,8 +20,8 @@ class CustomerController extends Controller {
         return $this->customer->list();
     }
 
-    public function show() {
-        return $this->customer->show();
+    public function show($id) {
+        return $this->customer->show($id);
     }
 
     public function store(StoreRequest $request)
