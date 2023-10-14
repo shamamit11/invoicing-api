@@ -57,4 +57,9 @@ trait StoreImageTrait
         Storage::disk($disk)->put($folder . $filename, $image);
         return $filename;
     }
+
+    public function StorePdf($file, $folder, $disk = 'public')
+    {
+        $file->storeAs($folder, $file, $disk);
+    }
 }

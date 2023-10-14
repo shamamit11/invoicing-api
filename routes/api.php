@@ -71,6 +71,8 @@ Route::prefix('v1')->group(function () {
             Route::post('/receipt/store', 'store');
             Route::post('/receipt/updateStatus', 'updateStatus');
             Route::post('/receipt/delete', 'delete');
+            Route::get('/receipt/pdf/{rid}', 'getPDFLink');
+            Route::get('/receipt/send/{rid}', 'sendEmail');
         });
 
         Route::controller('QuotationController')->group(function () {

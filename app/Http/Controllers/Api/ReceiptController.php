@@ -39,4 +39,14 @@ class ReceiptController extends Controller {
         return $this->receipt->delete($request->validated());
     }
 
+    public function getPDFLink($rid)
+    {
+        return $this->receipt->getPDFLink($rid);
+    }
+
+    public function sendEmail($rid)
+    {
+        return $this->receipt->sendEmail($rid);
+    }
+
 }
