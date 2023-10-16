@@ -8,7 +8,6 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Receipt;
 use Config;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Storage;
 use Rmunate\Utilities\SpellNumber;
 
 class ReceiptService
@@ -88,7 +87,7 @@ class ReceiptService
             //create pdf
             $pdf_path = '/'.$user->usercode.'/receipts/';
             $pdf_name = $item->receipt_code.'.pdf';
-            $pdf = PDF::loadView('receipt.default', compact('image_path', 'item', 'customer_name', 'amount_words', 'organization'))->setOptions(['defaultFont' => 'sans-serif', 'isRemoteEnabled', true]);
+            $pdf = PDF::loadView('receipt.default', compact('image_path', 'item', 'customer_name', 'amount_words', 'organization'))->setOptions(['defaultFont' => 'sans-serif', 'isRemoteEnabled' => true]);
             $pdf->save($pdf_path. $pdf_name, 'public');
 
             return [

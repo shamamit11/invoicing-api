@@ -80,6 +80,8 @@ Route::prefix('v1')->group(function () {
             Route::get('/quotation/{id}', 'show');
             Route::post('/quotation/store', 'store');
             Route::post('/quotation/delete', 'delete');
+            Route::get('/quotation/pdf/{id}', 'getPDFLink');
+            Route::get('/quotation/send/{id}', 'sendEmail');
         });
 
         Route::controller('InvoiceController')->group(function () {
@@ -88,6 +90,8 @@ Route::prefix('v1')->group(function () {
             Route::post('/invoice/store', 'store');
             Route::post('/invoice/delete', 'delete');
             Route::post('/invoice/payment/store', 'storePayment');
+            Route::get('/invoice/pdf/{id}', 'getPDFLink');
+            Route::get('/invoice/send/{id}', 'sendEmail');
         });
     });
 });

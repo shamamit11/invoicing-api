@@ -33,4 +33,14 @@ class QuotationController extends Controller {
         return $this->quotation->delete($request->validated());
     }
 
+    public function getPDFLink($qid)
+    {
+        return $this->quotation->getPDFLink($qid);
+    }
+
+    public function sendEmail($qid)
+    {
+        return $this->quotation->sendEmail($qid);
+    }
+
 }

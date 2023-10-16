@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Invoice\DeleteRequest;
 use App\Http\Requests\Api\Invoice\PaymentRequest;
 use App\Http\Requests\Api\Invoice\StoreRequest;
+use App\Models\Invoice;
+use App\Models\InvoiceItem;
 use App\Services\Api\InvoiceService;
 
 class InvoiceController extends Controller {
@@ -37,6 +39,16 @@ class InvoiceController extends Controller {
     public function storePayment(PaymentRequest $request)
     {
         return $this->invoice->storePayment($request->validated());
+    }
+
+    public function getPDFLink($id)
+    {
+        return $this->invoice->getPDFLink($id);
+    }
+
+    public function sendEmail($id)
+    {
+        return $this->invoice->sendEmail($id);
     }
 
 }

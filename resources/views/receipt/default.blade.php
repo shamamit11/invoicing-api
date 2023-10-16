@@ -165,7 +165,7 @@
             </tr>
           </table>
 
-          <table border="0" cellpadding="10" cellspacing="10" width="150" align="right">
+          <table border="0" cellpadding="10" cellspacing="10" width="300" align="right">
             <tr>
                 <td width="50%" style="text-align: right;">
                     <img

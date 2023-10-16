@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('invoice_id')->nullable();
             $table->string('description')->nullable();
+            $table->integer('qty')->nullable();
             $table->double('amount')->nullable();
             $table->timestamps();
             $table->foreign('invoice_id')->references('id')->on('invoices')->cascadeOnUpdate()->cascadeOnDelete();

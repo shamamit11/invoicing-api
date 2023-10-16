@@ -1,9 +1,15 @@
 <?php
 namespace App\Services\Api;
 
+use App\Models\Customer;
+use App\Models\EmailSetting;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Models\InvoicePayment;
+use App\Models\Organization;
+use Config;
+use Illuminate\Support\Facades\Mail;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class InvoiceService
 {
@@ -85,15 +91,27 @@ class InvoiceService
                 $qItem = new InvoiceItem;
                 $qItem->invoice_id = $insertId;
                 $qItem->description = $i['description'];
-                $qItem->amount = $i['amount'];
+                $qItem->qty = $i['qty'];
+                $qItem->amount = $i['amount'] * $i['qty'];
                 $qItem->save();
-                $i_amount = $i_amount + $i['amount'];
+                $i_amount = $i_amount + $i['amount'] * $i['qty'];
             }
             $invoice->total_amount = $i_amount;
             $i_tax = $i_amount * $invoice->tax_percent / 100;
             $invoice->total_tax = $i_tax;
             $invoice->save();
-            
+
+            $customer = Customer::where('id', $item->customer_id)->first();
+            $organization = Organization::where('user_id', $user->id)->first();
+            $image_path = '/app/public/'.$user->usercode.'/organization/';
+            $invoice = Invoice::where('id', $insertId)->first();
+            $invoiceItems = InvoiceItem::where('invoice_id', $insertId)->get();
+
+            $pdf_path = '/'.$user->usercode.'/invoices/';
+            $pdf_name = $item->invoice_code.'.pdf';
+            $pdf = PDF::loadView('invoice.default', compact('image_path', 'invoice', 'invoiceItems', 'customer', 'organization'))->setOptions(['defaultFont' => 'sans-serif', 'isRemoteEnabled' => true]);
+            $pdf->save($pdf_path. $pdf_name, 'public');
+
             return [
                 "status" => 201,
                 "message" => 'success',
@@ -155,6 +173,66 @@ class InvoiceService
             ];
         } 
         catch (\Exception $e) {
+            return response()->json(['errors' => $e->getMessage()], 400);
+        }
+    }
+
+    public function getPDFLink($id) {
+        try {
+            $user = auth()->user();
+            $invoice = Invoice::where([['id', $id], ['user_id', $user->id]])->first();
+
+            $pdf_link = env('APP_URL').'/storage/'.$user->usercode.'/invoices/'.$invoice->invoice_code.'.pdf';
+
+            return [
+                "status" => 200,
+                "link" => $pdf_link,
+                "message" => 'success',
+            ];
+        }
+        catch (\Exception$e) {
+            return response()->json(['errors' => $e->getMessage()], 400);
+        }
+    }
+
+    public function sendEmail($id) {
+        try {
+            $user = auth()->user();
+            $invoice = Invoice::where([['id', $id], ['user_id', $user->id]])->first();
+            $organization = Organization::where('user_id', $user->id)->first();
+            $emailSetting = EmailSetting::where('user_id', $user->id)->first();
+            $customer = Customer::where('id', $invoice->customer_id)->first();
+
+            if($emailSetting) {
+                Config::set('mail.mailers.smtp.host', $emailSetting->host);
+                Config::set('mail.mailers.smtp.port', $emailSetting->port);
+                Config::set('mail.mailers.smtp.encryption', $emailSetting->encryption);
+                Config::set('mail.mailers.smtp.username', $emailSetting->user_name);
+                Config::set('mail.mailers.smtp.password', $emailSetting->password);
+                Config::set('mail.from.address', $emailSetting->mail_from_address);
+                Config::set('mail.from.name', $emailSetting->mail_from_name);
+            }
+
+            $emailData = [
+                'customer_name' => $customer->name,
+                'organization_name' => $organization->org_name,
+                'pdf_link' => env('APP_URL').'/storage/'.$user->usercode.'/invoices/'.$invoice->invoice_code.'.pdf',
+                'org_logo' => env('APP_URL').'/storage/'.$user->usercode.'/organization/'.$organization->org_logo,
+                'invoice_no' => $invoice->invoice_no,
+                'invoiceItems' => InvoiceItem::where('invoice_id', $id)->get()
+            ];
+
+            Mail::send('invoice.email', $emailData, function ($message) use ($invoice, $organization, $customer) {
+                $message->to($customer->email, $customer->name)
+                    ->subject('Invoice# '. $invoice->invoice_no .' from '. $organization->org_name);
+            });
+
+            return [
+                "status" => 201,
+                "message" => 'success',
+            ];
+        }
+        catch (\Exception$e) {
             return response()->json(['errors' => $e->getMessage()], 400);
         }
     }

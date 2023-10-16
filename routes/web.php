@@ -20,3 +20,5 @@ Route::get('/', function () {
 Route::get('/verify-user/{token}', 'CommonController@verifyUserEmail')->name('verify-user-email');
 Route::get('/user-verified', 'CommonController@userVerified')->name('user-verified');
 Route::get('/user-not-verified', 'CommonController@userNotVerified')->name('user-not-verified');
+
+Route::get('/invoice/view/{id}', 'InvoiceController@viewInvoice');
