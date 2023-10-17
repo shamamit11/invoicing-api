@@ -80,8 +80,8 @@ Route::prefix('v1')->group(function () {
             Route::get('/quotation/{id}', 'show');
             Route::post('/quotation/store', 'store');
             Route::post('/quotation/delete', 'delete');
-            Route::get('/quotation/pdf/{id}', 'getPDFLink');
-            Route::get('/quotation/send/{id}', 'sendEmail');
+            Route::get('/quotation/pdf/{qid}', 'getPDFLink');
+            Route::get('/quotation/send/{qid}', 'sendEmail');
         });
 
         Route::controller('InvoiceController')->group(function () {
@@ -93,5 +93,27 @@ Route::prefix('v1')->group(function () {
             Route::get('/invoice/pdf/{id}', 'getPDFLink');
             Route::get('/invoice/send/{id}', 'sendEmail');
         });
+
+        Route::controller('AccountController')->group(function () {
+            Route::get('/accounts', 'index');
+            Route::get('/account/{id}', 'show');
+            Route::post('/account/store', 'store');
+            Route::post('/account/delete', 'delete');
+        });
+
+        Route::controller('IncomeExpenseController')->group(function () {
+            Route::get('/incomeExpense', 'index');
+            Route::get('/incomeExpense/{id}', 'show');
+            Route::post('/incomeExpense/store', 'store');
+            Route::post('/incomeExpense/delete', 'delete');
+        });
+
+        Route::controller('TransferController')->group(function () {
+            Route::get('/transfers', 'index');
+            Route::get('/transfer/{id}', 'show');
+            Route::post('/transfer/store', 'store');
+            Route::post('/transfer/delete', 'delete');
+        });
+        
     });
 });

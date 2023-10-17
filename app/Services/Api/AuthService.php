@@ -1,6 +1,8 @@
 <?php
 namespace App\Services\Api;
+use App\Models\Account;
 use App\Models\User;
+use DB;
 use Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
@@ -50,6 +52,11 @@ class AuthService
             $user->device_id = isset($request['device_id']) ? $request['device_id'] : null;
             $user->is_deleted = 0;
             $user->save();
+
+            DB::table('accounts')->insert([
+                ['user_id' => $user->id, 'name' => 'Cash', 'balance' => 0, 'is_system_data' => 1, 'is_deleted' => 0, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+                ['user_id' => $user->id, 'name' => 'Bank', 'balance' => 0, 'is_system_data' => 1, 'is_deleted' => 0, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')]
+            ]);
 
             //send verification email
             $token = encode_param($user->usercode);
