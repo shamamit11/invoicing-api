@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('accounts', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->string('name')->unique();
+            $table->string('name');
             $table->boolean('is_system_data')->default(0);
             $table->boolean('is_deleted')->default(0);
             $table->timestamps();
