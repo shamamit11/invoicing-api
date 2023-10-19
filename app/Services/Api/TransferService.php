@@ -1,6 +1,7 @@
 <?php
 namespace App\Services\Api;
 
+use App\Models\Account;
 use App\Models\AccountTransaction;
 use App\Models\Transfer;
 use DB;
@@ -12,6 +13,12 @@ class TransferService
         try {
             $user = auth()->user();
             $transfers = Transfer::where([['user_id', $user->id]])->latest()->get();
+            foreach ($transfers as $transfer) {
+                $fromAccounts = Account::find($transfer->from_account_id);
+                $toAccounts = Account::find($transfer->to_account_id);
+                $transfer->from_account_name = $fromAccounts->name;
+                $transfer->to_account_name = $toAccounts->name;
+            }
             return [
                 "status" => 200,
                 "data" => $transfers
@@ -27,6 +34,11 @@ class TransferService
         try {
             $user = auth()->user();
             $transfer = Transfer::where([['user_id', $user->id], ['id', $id]])->first();
+            $fromAccount = Account::find($transfer->from_account_id);
+            $toAccount = Account::find($transfer->to_account_id);
+            $transfer->from_account_name = $fromAccount->name;
+            $transfer->to_account_name = $toAccount->name;
+            
             return [
                 "status" => 200,
                 "data" => $transfer

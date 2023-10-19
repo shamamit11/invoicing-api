@@ -16,7 +16,11 @@ class QuotationService
     {
         try {
             $user = auth()->user();
-            $items = Quotation::where([['user_id', $user->id], ['is_deleted', 0]])->latest()->paginate(100);
+            $items = Quotation::where([['user_id', $user->id], ['is_deleted', 0]])->latest()->get();
+            foreach ($items as $item) {
+                $customer = Customer::find($item->customer_id);
+                $item->customer_name = $customer->name;
+            }
             return [
                 "status" => 200,
                 "data" => $items
@@ -32,6 +36,10 @@ class QuotationService
         try {
             $user = auth()->user();
             $item = Quotation::where([['user_id', $user->id], ['id', $id]])->first();
+            
+            $customer = Customer::find($item->customer_id);
+            $item->customer_name = $customer->name;
+
             $listItems = QuotationItem::where('quotation_id', $id)->get();
 
             if(count($listItems) > 0) {

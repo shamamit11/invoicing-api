@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('customer_id')->nullable();
             $table->string('receipt_code')->unique()->index();
             $table->string('receipt_no')->nullable();
-            $table->date('date')->nullable();
+            $table->timestampTz('date')->nullable();
             $table->string('payment_method')->nullable();
             $table->double('total_amount')->nullable();
             $table->string('paid_for')->nullable();

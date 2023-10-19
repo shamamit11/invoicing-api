@@ -1,7 +1,9 @@
 <?php
 namespace App\Services\Api;
 
+use App\Models\Account;
 use App\Models\AccountTransaction;
+use App\Models\Customer;
 use App\Models\IncomeExpense;
 
 class IncomeExpenseService
@@ -11,6 +13,12 @@ class IncomeExpenseService
         try {
             $user = auth()->user();
             $transactions = IncomeExpense::where([['user_id', $user->id]])->latest()->get();
+            foreach ($transactions as $transaction) {
+                $customer = Customer::find($transaction->customer_id);
+                $account = Account::find($transaction->account_id);
+                $transaction->customer_name = $customer->name;
+                $transaction->account_name = $account->name;
+            }
             return [
                 "status" => 200,
                 "data" => $transactions
@@ -26,6 +34,10 @@ class IncomeExpenseService
         try {
             $user = auth()->user();
             $transaction = IncomeExpense::where([['user_id', $user->id], ['id', $id]])->first();
+            $customer = Customer::find($transaction->customer_id);
+            $account = Account::find($transaction->account_id);
+            $transaction->customer_name = $customer->name;
+            $transaction->account_name = $account->name;
             return [
                 "status" => 200,
                 "data" => $transaction

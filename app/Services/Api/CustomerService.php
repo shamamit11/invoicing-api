@@ -9,7 +9,7 @@ class CustomerService
     {
         try {
             $user = auth()->user();
-            $customers = Customer::where([['user_id', $user->id], ['is_deleted', 0]])->latest()->paginate(100);
+            $customers = Customer::where([['user_id', $user->id], ['is_deleted', 0]])->latest()->get();
             return [
                 "status" => 200,
                 "data" => $customers

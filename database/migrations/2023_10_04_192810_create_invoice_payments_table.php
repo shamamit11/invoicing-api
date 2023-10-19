@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('invoice_id')->nullable();
             $table->string('description')->nullable();
             $table->double('paid_amount')->nullable();
-            $table->date('paid_date')->nullable();
+            $table->timestampTz('paid_date')->nullable();
             $table->timestamps();
             $table->foreign('invoice_id')->references('id')->on('invoices')->cascadeOnUpdate()->cascadeOnDelete();
         });

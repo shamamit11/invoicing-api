@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('customer_id')->nullable();
             $table->string('invoice_code')->unique()->index();
             $table->string('invoice_no')->nullable();
-            $table->date('date')->nullable();
+            $table->timestampTz('date')->nullable();
             $table->double('total_amount')->nullable();
             $table->double('tax_percent')->nullable();
             $table->double('total_tax')->nullable();

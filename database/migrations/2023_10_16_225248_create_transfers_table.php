@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('transfers', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->date('date')->nullable();
+            $table->timestampTz('date')->nullable();
             $table->unsignedBigInteger('from_account_id')->nullable();
             $table->unsignedBigInteger('to_account_id')->nullable();
             $table->text('description')->nullable();

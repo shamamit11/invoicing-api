@@ -16,7 +16,11 @@ class ReceiptService
     {
         try {
             $user = auth()->user();
-            $items = Receipt::where([['user_id', $user->id], ['is_deleted', 0]])->latest()->paginate(100);
+            $items = Receipt::where([['user_id', $user->id], ['is_deleted', 0]])->latest()->get();
+            foreach ($items as $item) {
+                $customer = Customer::find($item->customer_id);
+                $item->customer_name = $customer->name;
+            }
             return [
                 "status" => 200,
                 "data" => $items
@@ -32,6 +36,9 @@ class ReceiptService
         try {
             $user = auth()->user();
             $item = Receipt::where([['user_id', $user->id], ['id', $id]])->first();
+            $customer = Customer::find($item->customer_id);
+            $item->customer_name = $customer->name;
+            
             return [
                 "status" => 200,
                 "data" => $item
