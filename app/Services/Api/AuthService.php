@@ -69,6 +69,12 @@ class AuthService
                 $message->to($request['email']);
                 $message->subject('EZ Invoicing: Verify Your Account');
             });
+
+            return [
+                "status" => 200,
+                "data" => $user,
+                "message" => 'success'
+            ];
         } 
         catch (\Exception $e) {
             return response()->json(['errors' => $e->getMessage()], 400);
