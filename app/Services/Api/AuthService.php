@@ -54,8 +54,8 @@ class AuthService
             $user->save();
 
             DB::table('accounts')->insert([
-                ['user_id' => $user->id, 'name' => 'Cash', 'balance' => 0, 'is_system_data' => 1, 'is_deleted' => 0, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
-                ['user_id' => $user->id, 'name' => 'Bank', 'balance' => 0, 'is_system_data' => 1, 'is_deleted' => 0, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')]
+                ['user_id' => $user->id, 'name' => 'Cash', 'is_system_data' => 1, 'is_deleted' => 0, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+                ['user_id' => $user->id, 'name' => 'Bank', 'is_system_data' => 1, 'is_deleted' => 0, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')]
             ]);
 
             //send verification email
