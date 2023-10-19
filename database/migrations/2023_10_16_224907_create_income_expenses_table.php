@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('income_expenses', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->date('date')->nullable();
+            $table->timestampTz('date')->nullable();
             $table->enum('transaction_type', ['income', 'expense']);
             $table->unsignedBigInteger('customer_id')->nullable();
             $table->unsignedBigInteger('account_id')->nullable();
